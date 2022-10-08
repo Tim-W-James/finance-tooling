@@ -1,0 +1,7 @@
+textcat_model
+train.spacy
+dev.spacy
+metrics.json
+*.csv
+fireflyiii/*env*
+export

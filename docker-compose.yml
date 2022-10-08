@@ -1,0 +1,52 @@
+version: '3.3'
+
+services:
+  app:
+    image: fireflyiii/core:latest
+    restart: always
+    volumes:
+      - firefly_iii_upload:/var/www/html/storage/upload
+    env_file: fireflyiii/.env
+    ports:
+      - 80:8080
+    depends_on:
+      - db
+  db:
+    image: mariadb
+    hostname: fireflyiiidb
+    restart: always
+    env_file: fireflyiii/.db.env
+    volumes:
+      - firefly_iii_db:/var/lib/mysql
+  fireflyiii_db_backup:
+    image: fradelg/mysql-cron-backup
+    depends_on:
+      - fireflyiiidb
+    volumes:
+      - ./mysql_backup:/backup
+    env_file: fireflyiii/.db.env
+    environment:
+      - MYSQL_HOST=fireflyiiidb
+      - MAX_BACKUPS=15
+      - INIT_BACKUP=1
+      - CRON_TIME=0 * * * * # Every hour at minute 0
+      - GZIP_LEVEL=9 # High compression level
+  fidi:
+    image: fireflyiii/data-importer:latest
+    restart: always
+    env_file: fireflyiii/.fidi.env
+    ports:
+      - 8081:8080
+    depends_on:
+      - app
+  categoriser:
+    build: ./trans-cat/.
+    ports:
+      - 8082:5000
+    volumes:
+      - ./trans-cat/web:/code
+    environment:
+      - PYTHONUNBUFFERED=1
+volumes:
+   firefly_iii_upload:
+   firefly_iii_db:
