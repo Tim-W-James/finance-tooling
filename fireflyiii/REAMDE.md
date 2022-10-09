@@ -2,14 +2,18 @@
 
 Various pieces of config for [Firefly III](https://www.firefly-iii.org/).
 
-## Config
+## Export
 
-- Export:
+<https://docs.firefly-iii.org/firefly-iii/exporting-data/>
+
+- Export config:
 
   ```sh
-  docker exec -it <container> php artisan firefly-iii:export-data --export-<content> --export_directory=./storage/export/ --force --token=<cli-token> && docker cp
+  docker exec -it <container> php artisan firefly-iii:export-data --export-accounts --export-budgets --export-categories --export-tags --export-recurring --export-rules --export-bills --export-piggies --export_directory=./storage/export/ --force --token=<cli-token> && docker cp
   fireflyiii-app-1:/var/www/html/storage/export .
   ```
+
+- Transactions: use `--export-transactions`
 
 ## Manual Backup
 
