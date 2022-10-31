@@ -8,7 +8,7 @@ services:
       - firefly_iii_upload:/var/www/html/storage/upload
     env_file: fireflyiii/.env
     ports:
-      - 80:8080
+      - 8081:8080
     depends_on:
       - db
   db:
@@ -21,7 +21,7 @@ services:
   fireflyiii_db_backup:
     image: fradelg/mysql-cron-backup
     depends_on:
-      - fireflyiiidb
+      - db
     volumes:
       - ./mysql_backup:/backup
     env_file: fireflyiii/.db.env
@@ -36,13 +36,13 @@ services:
     restart: always
     env_file: fireflyiii/.fidi.env
     ports:
-      - 8081:8080
+      - 8082:8080
     depends_on:
       - app
   categoriser:
     build: ./trans-cat/.
     ports:
-      - 8082:5000
+      - 8083:5000
     volumes:
       - ./trans-cat/web:/code
     environment:
